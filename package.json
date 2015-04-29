@@ -1,0 +1,11 @@
+{
+  "name": "csgoBot",
+  "version": "0.0.0",
+  "description": "A bot for the csgo channel to Onlines slack",
+  "main": "csgoBot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
