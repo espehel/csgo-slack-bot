@@ -1,4 +1,7 @@
-reated by https://www.gitignore.io
+Created by https://www.gitignore.io
+
+#Configs
+config.js
 
 #!! ERROR: n is undefined. Use list command to see defined gitignore types !!#
 
