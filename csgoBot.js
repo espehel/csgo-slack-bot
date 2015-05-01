@@ -35,14 +35,63 @@ executeCommand = function(command,user, callback){
         return;
     console.log("COMMAND: ", args);
     if(args[0] == "kd"){
-        steamApi.getUserKD(userData.getUserIdByName(user),function(data){
-            callback(data);
+        userData.getUserIdByName(user, function(result) {
+            steamApi.getUserKD(result,function(data){
+                callback(data);
+            })
         })
     }
     else if(args[0] == "register"){
-
+        if(args.length == 1)
+            return;
+        userData.putUserIdByName(user,args[1]);
+    }
+    else if(args[0] == "id"){
+        userData.getUserIdByName(user, function (result) {
+            callback(result);
+        })
+    }
+    else if(args[0] == "lastmatch"){
+        userData.getUserIdByName(user, function (result) {
+            steamApi.getLastMatchStats(result, function (data) {
+                callback("Last match stats for "+user+": \n" +
+                    "Rounds Won/Lost: "+ data.won+"/"+data.lost+"\n" +
+                    "Kills: "+data.kills+"\n" +
+                    "Deaths: "+data.deaths+"\n" +
+                    "Rounds mvp: "+data.mvps+"\n" +
+                    "Damage per kill: "+data.damage/data.kills);
+            })
+        })
+    }
+    else if(args[0] == "help"){
+        callback("Commands supported by csgoBot: \n" +
+            "!kd:\tRetreives your kill/death ratio.\n" +
+            "!id:\tRetreives the id currently linked to your nick.\n" +
+            "!lastmatch:\tRetreives the stats for the last match you played.\n" +
+            "!register \<id\>:\tLinks the id to your nick.\n" +
+            "");
     }
 };
+/*userData.getUserIdByName('asd', function(result){
+    console.log(result);
+});*/
+/*executeCommand('!kd','espen', function (data) {
+    console.log(data);
+});*/
+/*executeCommand('!register 123','espen', function (data) {
+    console.log(data);
+});*/
+/*executeCommand('!kd','espen', function (data) {
+    console.log(data);
+});*/
+
+/*executeCommand('!register 76561197993060799','espen', function (data) {
+    console.log(data);
+});*/
+/*executeCommand('!kd','espen', function (data) {
+    console.log(data);
+});*/
+
 
 
 var bot = new SlackClient(config.slackToken,true,true);
