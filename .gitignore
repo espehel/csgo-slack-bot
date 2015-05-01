@@ -1,7 +1,7 @@
 Created by https://www.gitignore.io
 
 #data folder
-data/*
+data/
 
 #Configs
 config.js
