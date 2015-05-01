@@ -1,29 +1,8 @@
 var steamApi = require("./my_modules/SteamApi.js");
 var userData = require("./my_modules/UserData.js");
 var config = require("./config");
-var irc = require("irc");
 var SlackClient = require('slack-client');
 
-
-/*steamApi.getUserStats('76561197993060799', function(data){
-    console.log(data);
-});*/
-/*
-var bot = new irc.Client(config.server, config.botname, {
-    channels: config.channels,
-    port: config.port,
-    password: config.pass
-});
-bot.addListener('message', function(from, to, message){
-    console.log(from + ' => ' + to + ': ' + message);
-});
-bot.addListener('error', function(message) {
-    console.log('error: ', message);
-});
-bot.addListener('raw', function(message) {
-    console.log(message.server +'('+message.rawCommand+'): ',message.args);
-});
-*/
 
 getArgs = function (command) {
     return command.substring(1).toLowerCase().split(" ");
@@ -112,10 +91,6 @@ bot.on('message', function (message) {
                 console.log("SENDING: " + data);
                 channel.send(data.toString());
             })
-
-
-        //console.log(channel.name + ':' + user.name + ':' + message.text);
-
     }
 });
 
