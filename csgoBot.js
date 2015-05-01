@@ -23,7 +23,17 @@ executeCommand = function(command,user, callback){
     else if(args[0] == "register"){
         if(args.length == 1)
             return;
-        userData.putUserIdByName(user,args[1]);
+
+        var id = args[1];
+        if(isNaN(id))
+            steamApi.getIdByVanityurl(id, function (data) {
+                if(data != -1)
+                    userData.putUserIdByName(user,data);
+                else
+                    callback("The ID is not an valid steamid64 or a registered vanity url");
+            })
+        else
+            userData.putUserIdByName(user,args[1]);
     }
     else if(args[0] == "id"){
         userData.getUserIdByName(user, function (result) {
@@ -47,10 +57,11 @@ executeCommand = function(command,user, callback){
             "!kd:\tRetreives your kill/death ratio.\n" +
             "!id:\tRetreives the id currently linked to your nick.\n" +
             "!lastmatch:\tRetreives the stats for the last match you played.\n" +
-            "!register \<id\>:\tLinks the id to your nick.\n" +
+            "!register \<steamid\>:\tLinks the steamid or a vanity url to your nick.\n" +
             "");
     }
 };
+
 /*userData.getUserIdByName('asd', function(result){
     console.log(result);
 });*/

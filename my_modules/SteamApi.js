@@ -26,7 +26,20 @@ var request = function(url, callback){
 };
 
 
-module.exports.getUserStats = function(userId, callback){
+
+module.exports.getIdByVanityurl = function(vanityurl, callback){
+    var url = 'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key='+config.steamApiKey+'&vanityurl='+vanityurl;
+    console.log(url);
+    request(url, function (data) {
+        if(Object.keys(data).length == 0) {
+            return;
+        }
+        if(data['response']['success'] == '1')
+            callback(data['response']['steamid']);
+        else
+            callback(-1);
+    });
+};module.exports.getUserStats = function(userId, callback){
     var url = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key='+config.steamApiKey+'&steamid='+userId;
     console.log(url);
     request(url, function (data) {
