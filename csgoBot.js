@@ -14,7 +14,13 @@ executeCommand = function(command,user, callback){
         return;
     console.log("COMMAND: ", args);
     if(args[0] == "kd"){
-        userData.getUserIdByName(user, function(result) {
+        var steamuser;
+        if(args.length == 2)
+            steamuser = args[1];
+        else
+            steamuser = user;
+
+        userData.getUserIdByName(steamuser, function(result) {
             steamApi.getUserKD(result,function(data){
                 callback(data);
             })
