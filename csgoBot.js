@@ -93,9 +93,14 @@ bot.on('open', function(){
 
 bot.on('message', function (message) {
     var channel = bot.getChannelGroupOrDMByID(message.channel);
+    if(config.slackChannels.indexOf(channel.name) == -1)
+        return;
     var user = bot.getUserByID(message.user);
 
     if (message.type === 'message') {
+
+        if(typeof message.text === 'undefined' || message.text.length == 0)
+            return;
 
         if(message.text.charAt(0) == '!')
             executeCommand(message.text,user.name, function (data) {
