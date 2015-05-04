@@ -25,3 +25,16 @@ module.exports.putUserIdByName = function(userName,userId){
         });
     })
 };
+
+module.exports.putUserIdByName = function(userName, userId, matchdata){
+    module.exports.getUserIdByName(userName, function(result){
+        if(result == -1) {
+            db.collection('matches').insert({name: userName, steamid: userId}, function (err, result) {
+                if (err) throw err;
+            });
+        }
+        db.collection('matches').update({name:userName}, {'$set': {steamid :userId}}, function(err) {
+        if (err) throw err;
+        });
+    })
+};

@@ -24,6 +24,26 @@ var request = function(url, callback){
     });
 })
 };
+//Tries to check if the match is ranked by looking at rounds and players
+function validateMatch(matchDAO) {
+    //check for players
+    if(matchDAO.players != 10)
+        return false;
+
+    //check number of rounds
+    var valid = function(matchDAO){
+        if(matchDAO.won == 16)
+            return true;
+
+        var rounds = matchDAO.tw+matchDAO.ctw;
+        if(rounds == 30)
+            return true;
+        if(rounds-matchDAO.won == 16)
+            return true;
+        return false;
+    }(matchDAO);
+    return valid;
+}
 
 
 
@@ -77,29 +97,35 @@ module.exports.getLastMatchStats = function(userId, callback){
         if(Object.keys(data).length == 0) {
             return;
         }
-        var won = 0;
+        /*var won = 0;
         var ctw = 0;
         var tw = 0;
         var kills = 0;
         var deaths = 0;
         var mvps = 0;
-        var damage = 0;
+        var damage = 0;*/
+        var matchDAO = {};
         data['playerstats']['stats'].forEach(function(entry){
             if(entry.name == 'last_match_wins')
-                won = entry.value;
+                matchDAO.won = entry.value;
             if(entry.name == 'last_match_kills')
-                kills = entry.value;
+                matchDAO.kills = entry.value;
             if(entry.name == 'last_match_deaths')
-                deaths = entry.value;
+                matchDAO.deaths = entry.value;
             if(entry.name == 'last_match_mvps')
-                mvps = entry.value;
+                matchDAO.mvps = entry.value;
             if(entry.name == 'last_match_damage')
-                damage = entry.value;
+                matchDAO.damage = entry.value;
             if(entry.name == 'last_match_t_wins')
-                tw = entry.value;
+                matchDAO.tw = entry.value;
             if(entry.name == 'last_match_ct_wins')
-                ctw = entry.value;
+                matchDAO.ctw = entry.value;
+            if(entry.name == 'last_match_max_players')
+                matchDAO.players = entry.value;
         })
-        callback({won: won,lost: (tw+ctw)-won, kills: kills, deaths: deaths, mvps: mvps, damage: damage});
+        var validMatch = validateMatch(matchDAO);
+
+        callback({won: matchDAO.won,lost: (matchDAO.tw+matchDAO.ctw)-matchDAO.won,
+            kills: matchDAO.kills, deaths: matchDAO.deaths, mvps: matchDAO.mvps, damage: matchDAO.damage, validMatch: validMatch});
     });
 };

@@ -54,7 +54,8 @@ executeCommand = function(command,user, callback){
                     "Kills: "+data.kills+"\n" +
                     "Deaths: "+data.deaths+"\n" +
                     "Rounds mvp: "+data.mvps+"\n" +
-                    "Damage per kill: "+data.damage/data.kills);
+                    "Damage per kill: "+data.damage/data.kills+"\n" +
+                    "Valid match: "+data.validMatch);
             })
         })
     }
