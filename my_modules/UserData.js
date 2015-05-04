@@ -4,7 +4,6 @@ var db = mongo.db(config.databasePath, {native_parser:true});
 
 
 module.exports.getUserIdByName = function (name, callback) {
-    //return '76561197993060799';
     db.collection('steamid').find({name:name}).toArray(function(err, result) {
         if(result.length==0) {
             callback(-1);
@@ -15,7 +14,6 @@ module.exports.getUserIdByName = function (name, callback) {
 }
 
 module.exports.putUserIdByName = function(userName,userId){
-
     module.exports.getUserIdByName(userName, function(result){
         if(result == -1) {
             db.collection('steamid').insert({name: userName, steamid: userId}, function (err, result) {
