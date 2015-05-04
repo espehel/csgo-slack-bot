@@ -97,13 +97,6 @@ module.exports.getLastMatchStats = function(userId, callback){
         if(Object.keys(data).length == 0) {
             return;
         }
-        /*var won = 0;
-        var ctw = 0;
-        var tw = 0;
-        var kills = 0;
-        var deaths = 0;
-        var mvps = 0;
-        var damage = 0;*/
         var matchDAO = {};
         data['playerstats']['stats'].forEach(function(entry){
             if(entry.name == 'last_match_wins')
