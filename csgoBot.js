@@ -1,7 +1,8 @@
 var steamApi = require("./my_modules/SteamApi.js");
 var userData = require("./my_modules/UserData.js");
-var config = require("./config");
+var config = require('./config');
 var SlackClient = require('slack-client');
+var utils = require('./my_modules/Utils.js');
 
 
 getArgs = function (command) {
@@ -54,9 +55,53 @@ executeCommand = function(command,user, callback){
                     "Kills: "+data.kills+"\n" +
                     "Deaths: "+data.deaths+"\n" +
                     "Rounds mvp: "+data.mvps+"\n" +
-                    "Damage per kill: "+data.damage/data.kills);
+                    "Damage per kill: "+utils.damagePerKill(data)+"\n" +
+                    "Valid match: "+data.validMatch);
             })
         })
+    }
+    else if(args[0] == "submit"){
+        if(args.length == 1)
+            return;
+
+        var element = args[1];
+        if(element =="lastmatch"){
+            userData.getUserIdByName(user, function (result) {
+                steamApi.getLastMatchStats(result, function (data) {
+                    if(data.validMatch)
+                        userData.putMatchDataById(user,result,data);
+                    else
+                        console.log("WARN: invalid match");
+                })
+            })
+        }
+    }
+    else if (args[0] == "highscore"){
+        if(args.length == 1)
+            return;
+
+        var element = args[1];
+        if(element =="lastmatch"){
+            userData.getAllMatchData(function (result) {
+                result.sort(function (a, b) {
+                    var kd = utils.kd(b)-utils.kd(a);
+                    if(kd != 0)
+                        return kd;
+                    var kills = b.kills- a.kills
+                    if(kills != 0)
+                        return kills;
+                    return b.mvps- a.mvps;
+                });
+                var output = "Name: Kills, Deaths, Won/Lost, MVPs \n";
+                result.forEach(function(entry){
+                    output += entry.name +": " + entry.kills +", " +entry.deaths + ", " + entry.won +"/" + entry.lost + ", " + entry.mvps + "\n";
+                });
+                callback(output);
+
+            })
+        }
+
+
     }
     else if(args[0] == "help"){
         callback("Commands supported by csgoBot: \n" +
@@ -64,31 +109,11 @@ executeCommand = function(command,user, callback){
             "!id:\tRetreives the id currently linked to your nick.\n" +
             "!lastmatch:\tRetreives the stats for the last match you played.\n" +
             "!register \<steamid\>:\tLinks the steamid or a vanity url to your nick.\n" +
+            "!submit lastmatch:\tSubmits your last match to the highscore list.\n" +
+            "!highscore lastmatch:\tDisplays the top ten users with their last match submitted.\n" +
             "");
     }
 };
-
-/*userData.getUserIdByName('asd', function(result){
-    console.log(result);
-});*/
-/*executeCommand('!kd','espen', function (data) {
-    console.log(data);
-});*/
-/*executeCommand('!register 123','espen', function (data) {
-    console.log(data);
-});*/
-/*executeCommand('!kd','espen', function (data) {
-    console.log(data);
-});*/
-
-/*executeCommand('!register 76561197993060799','espen', function (data) {
-    console.log(data);
-});*/
-/*executeCommand('!kd','espen', function (data) {
-    console.log(data);
-});*/
-
-
 
 var bot = new SlackClient(config.slackToken,true,true);
 console.log(config.slackToken);

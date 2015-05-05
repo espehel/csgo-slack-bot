@@ -1,0 +1,6 @@
+{
+  "steamApiKey" : "your steam api key",
+  "slackToken" : "the token for the slack bot",
+  "databasePath" : "mongodb://localhost:27017/database",
+  "slackChannels" : ["channel1","channel2"]
+}
