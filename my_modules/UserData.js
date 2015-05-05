@@ -32,8 +32,8 @@ module.exports.getAllMatchData = function (callback) {
         callback(result);
     });
 };
-module.exports.getMatchDataById = function (steamid, callback) {
-    db.collection('matches').find({steamid:steamid}).toArray(function(err, result) {
+module.exports.getMatchDataByName = function (name, callback) {
+    db.collection('matches').find({name:name}).toArray(function(err, result) {
         if(result.length==0) {
             callback(-1);
             return;
@@ -44,13 +44,15 @@ module.exports.getMatchDataById = function (steamid, callback) {
 module.exports.putMatchDataById = function(userName, userId, matchdata){
     matchdata.name = userName;
     matchdata.steamid=userId;
-    module.exports.getMatchDataById(userName, function(result){
+    module.exports.getMatchDataByName(matchdata.name, function(result){
+        console.log(result);
         if(result == -1) {
             db.collection('matches').insert(matchdata, function (err, result) {
                 if (err) throw err;
             });
         }
-        db.collection('matches').update({steamid:userId}, {'$set': matchdata}, function(err) {
+        db.collection('matches').update({name:matchdata.name}, {'$set': {won: matchdata.won,lost: matchdata.lost, kills: matchdata.kills,
+            deaths: matchdata.deaths, mvps: matchdata.mvps, damage: matchdata.damage, validMatch: matchdata.validMatch, steamid: matchdata.steamid}}, function(err) {
         if (err) throw err;
         });
     })

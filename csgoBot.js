@@ -110,31 +110,10 @@ executeCommand = function(command,user, callback){
             "!lastmatch:\tRetreives the stats for the last match you played.\n" +
             "!register \<steamid\>:\tLinks the steamid or a vanity url to your nick.\n" +
             "!submit lastmatch:\tSubmits your last match to the highscore list.\n" +
+            "!highscore lastmatch:\tDisplays the top ten users with their last match submitted.\n" +
             "");
     }
 };
-
-/*userData.getUserIdByName('asd', function(result){
-    console.log(result);
-});*/
-/*executeCommand('!kd','espen', function (data) {
-    console.log(data);
-});*/
-/*executeCommand('!register 123','espen', function (data) {
-    console.log(data);
-});*/
-/*executeCommand('!kd','espen', function (data) {
-    console.log(data);
-});*/
-
-/*executeCommand('!register 76561197993060799','espen', function (data) {
-    console.log(data);
-});*/
-/*executeCommand('!kd','espen', function (data) {
-    console.log(data);
-});*/
-
-
 
 var bot = new SlackClient(config.slackToken,true,true);
 console.log(config.slackToken);
